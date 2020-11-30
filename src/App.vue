@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="d-flex w-100 h-100 align-items-center bg-secondary">
+  <div id="app" class="d-flex w-100 h-100 align-items-center background">
     <transition name="fade" mode="out-in">
       <router-view/>
     </transition>
@@ -14,6 +14,13 @@
   text-align: center;
   color: #2c3e50;
   overflow: hidden;
+}
+html, body {
+  background-color: lightgrey;
+}
+
+.background {
+  background-color: lightgrey;
 }
 
 .fade-enter, .fade-leave {

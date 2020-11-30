@@ -3,7 +3,7 @@
 		<div class="row d-none d-md-block"><br /></div>
 
 		<div class="row w-100 d-none d-md-block pb-3">
-			<h1 class="display-1">Todo App</h1>
+			<h1 class="display-1 text-black-50">Todo App</h1>
 		</div>
 
 		<div class="row justify-content-center w-100 h-100">
@@ -14,8 +14,12 @@
 							<div class="row justify-content-center">
 								<div class="input-group input-group-lg">
 									<div class="input-group-prepend pl-4">
-										<div class="input-group-text bg-white border-0">
-											<SvgIcon :class="haveTodos ? '': 'text-white'" type="mdi" :path="arrowPath"/>
+										<div @click="checkTodos" class="input-group-text bg-white border-0">
+											<SvgIcon
+												:class="haveTodos ? (checkAll ? '' : 'text-muted'): 'text-white'"
+												type="mdi"
+												:path="arrowPath"
+											/>
 										</div>
 									</div>
 									<input
@@ -48,7 +52,14 @@
 												@blur="todo.edit = false"
 												@keypress.enter="saveChanges(index)"
 											/>
-											<h3 @dblclick="activateEdit(todo, index)" class="form-control user-select-none text-left border-0" v-show="!todo.edit">{{ todo.name }}</h3>
+											<h3
+												@dblclick="activateEdit(todo, index)"
+												:class="todo.done ? 'form-control text-muted user-select-none text-left border-0':'form-control user-select-none text-left border-0'"
+												v-show="!todo.edit"
+											>
+												<del v-show="todo.done">{{ todo.name }}</del>
+												<span v-show="!todo.done">{{ todo.name }}</span>
+											</h3>
 										</div>
 										<div class="col-2 position-absolute">
 											<div v-show="todo.hover">
@@ -115,6 +126,22 @@
 
 		<div class="row d-none d-md-block"><br /></div>
 
+		<div class="row d-none d-md-block">
+			<span class="text-muted">Double click to edit a todo</span>
+		</div>
+
+		<div class="row d-none d-md-block">
+			<span class="text-muted">Created by </span><a href="https://github.com/masuarez17" class="pl-1">Marcos Suarez</a>
+		</div>
+
+		<div class="row d-none d-md-block">
+			<button type="button" @click="moveToLogin" class="bg-white border-0 btn-link bg-transparent">
+                Back to login
+            </button>
+		</div>
+
+		<div class="row d-none d-md-block"><br /></div>
+
 		<div class="row"><br /></div>
 
 	</div>
@@ -138,7 +165,10 @@ export default {
 
 			// ToDo Inputs
 			toDoInput: '',
-			editInput: ''
+			editInput: '',
+
+			// Todo check/uncheck all
+			checkAll: true
 		}
 	},
 	components: {
@@ -172,6 +202,19 @@ export default {
 	methods: {
 		moveToLogin () {
 			router.push('/')
+		},
+		checkTodos () {
+			if (this.checkAll) {
+				this.todoItems.forEach(todo => {
+					todo.done = true
+				})
+				this.checkAll = false
+			} else {
+				this.todoItems.forEach(todo => {
+					todo.done = false
+				})
+				this.checkAll = true
+			}
 		},
 		addTodo () {
 			const todo = {
